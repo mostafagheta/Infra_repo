@@ -72,5 +72,10 @@ pipeline {
                 terraformApply()
             }
         }
+        stage('Archive Artifacts') {
+         steps {
+            archiveInventory()
+         }
+            }
     }
 }
