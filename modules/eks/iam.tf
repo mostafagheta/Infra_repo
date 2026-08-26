@@ -19,7 +19,8 @@ resource "aws_iam_policy" "eks_admin" {
         Action = [
          "eks:*",
           "iam:ListRoles",
-          "iam:PassRole",
+          "iam:PassRole", 
+          "iam:GetRole",
           "ec2:DescribeSubnets",
           "ec2:DescribeVpcs",
           "ec2:DescribeSecurityGroups",
@@ -215,6 +216,14 @@ resource "aws_iam_role_policy" "external_secrets_pod_identity" {
     ]
   })
 }
+
+resource "aws_eks_pod_identity_association" "external_secrets" {
+  cluster_name    = module.eks.cluster_name
+  namespace       = "external-secrets"
+  service_account = "external-secrets"
+  role_arn        = aws_iam_role.external_secrets_pod_identity.arn
+}
+
 
 data "aws_caller_identity" "current" {}
 

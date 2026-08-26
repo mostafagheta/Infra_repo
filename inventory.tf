@@ -31,9 +31,6 @@ bastion ansible_host=${module.bastion_host.public_ip} ansible_user=ec2-user
 worker-${i + 1} ansible_host=${ip} ansible_user=ec2-user
 %{endfor}
 
-[all:vars]
-ansible_ssh_private_key_file=${var.ssh_private_key_path}
-ansible_ssh_common_args='-o ProxyJump=ec2-user@${module.bastion_host.public_ip}'
 EOT
 
   depends_on = [
