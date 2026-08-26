@@ -1,0 +1,13 @@
+---
+- name: Install EKS cluster addons
+  hosts: bastion
+  gather_facts: false
+  roles:
+    - common_kubeconfig
+    - metrics_server
+    - prometheus_stack
+    - argocd
+    - aws_lb_controller
+    - external_secrets
+    - velero
+    
