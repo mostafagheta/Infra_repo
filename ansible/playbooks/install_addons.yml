@@ -15,6 +15,8 @@
       tags: prometheus
     - role: argocd
       tags: argo
+    - role: vpa
+      tags: vpa
     - role: aws_lb_controller
       tags: alb
     - role: external_secrets
