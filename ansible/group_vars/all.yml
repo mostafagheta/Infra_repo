@@ -1,0 +1,10 @@
+eks_cluster_name: "myapp-eks-cluster"
+aws_region: "eu-central-1"
+kubeconfig_path: "/home/eks-manager/.kube/config"
+helm_binary_path: "/usr/local/bin/helm"
+
+# Terraform outputs: replace these placeholders when the infrastructure is ready.
+vpc_id: "vpc-0407bff15dca83b2b"
+lb_controller_role_arn: ""
+external_secrets_role_arn: ""
+
