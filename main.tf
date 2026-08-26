@@ -4,7 +4,12 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 6.0"
     }
+        local = {
+      source  = "hashicorp/local"
+      version = "~> 2.0"
+    }
   }
+
 }
 provider "aws" {
   region = var.aws_region
@@ -31,10 +36,7 @@ module "eks" {
   endpoint_public_access_cidrs = var.endpoint_public_access_cidrs
   node_group_config            = var.node_group_config
   tags                         = var.common_tags
-}
-
-data "aws_key_pair" "bastion" {
-  key_name = "myapp-bastion-key"
+  velero_environment           = var.velero_environment
 }
 
 module "bastion_host" {
