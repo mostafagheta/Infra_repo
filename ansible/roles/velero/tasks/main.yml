@@ -37,6 +37,7 @@
     wait: true
     values:
       cleanUpCRDs: false
+      upgradeCRDs: false
       credentials:
         useSecret: false
       serviceAccount:
@@ -49,6 +50,11 @@
             provider: aws
             bucket: "{{ velero_s3_bucket }}"
             default: true
+            config:
+              region: "{{ velero_aws_region }}"
+        volumeSnapshotLocation:
+          - name: default
+            provider: aws
             config:
               region: "{{ velero_aws_region }}"
       initContainers:

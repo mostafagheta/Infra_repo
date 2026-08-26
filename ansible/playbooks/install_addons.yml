@@ -1,13 +1,23 @@
 ---
-- name: Install EKS cluster addons
+- name: install addons
   hosts: bastion
   gather_facts: false
+  become: true
+  become_user: eks-manager
+  vars_files:
+    - ../group_vars/all.yml
   roles:
-    - common_kubeconfig
-    - metrics_server
-    - prometheus_stack
-    - argocd
-    - aws_lb_controller
-    - external_secrets
-    - velero
-    
+    - role: common_kubeconfig
+      tags: kubeconfig
+    - role: metrics_server
+      tags: metrics
+    - role: prometheus_stack
+      tags: prometheus
+    - role: argocd
+      tags: argo
+    - role: aws_lb_controller
+      tags: alb
+    - role: external_secrets
+      tags: ext-scrt
+    - role: velero
+      tags: velero
