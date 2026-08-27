@@ -20,7 +20,7 @@ rm -rf /tmp/aws /tmp/awscliv2.zip
 # 4. Install kubectl
 KUBECTL_VERSION=$(curl -fsSL https://dl.k8s.io/release/stable.txt)
 curl -fL -o /tmp/kubectl \
-  "https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl"
+  "https://dl.k8s.io/release/$${KUBECTL_VERSION}/bin/linux/amd64/kubectl"
 install -o root -g root -m 0755 /tmp/kubectl /usr/local/bin/kubectl
 rm -f /tmp/kubectl
 
