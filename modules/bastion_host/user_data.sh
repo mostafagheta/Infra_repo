@@ -4,8 +4,8 @@ set -e
 # 1. Update system
 yum update -y
 
-# 2. Install required packages
-yum install -y curl unzip git jq htop tree nano vim
+# 2. Install required packages (curl removed - curl-minimal already ships with AL2023)
+yum install -y unzip git jq htop tree nano vim
 
 # 3. Install AWS CLI v2
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" \
@@ -17,7 +17,7 @@ unzip -q /tmp/awscliv2.zip -d /tmp
   --update
 rm -rf /tmp/aws /tmp/awscliv2.zip
 
-# 4. Install kubectl (FIXED: removed extra $)
+# 4. Install kubectl
 KUBECTL_VERSION=$(curl -fsSL https://dl.k8s.io/release/stable.txt)
 curl -fL -o /tmp/kubectl \
   "https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl"
@@ -54,7 +54,7 @@ chmod 700 /home/eks-manager/.aws
 chmod 600 /home/eks-manager/.aws/credentials
 chmod 600 /home/eks-manager/.aws/config
 
-# 9. Create kubeconfig (FIXED: added PATH)
+# 9. Create kubeconfig
 mkdir -p /home/eks-manager/.kube
 chown -R eks-manager:eks-manager /home/eks-manager/.kube
 
