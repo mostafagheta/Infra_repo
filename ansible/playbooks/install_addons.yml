@@ -6,12 +6,6 @@
   become_user: eks-manager
   vars_files:
     - ../group_vars/all.yml
-  pre_tasks:
-    - name: Ensure pip3 is installed
-      ansible.builtin.package:
-        name: python3-pip
-        state: present
-      become: true
   roles:
     - role: common_kubeconfig
       tags: kubeconfig
