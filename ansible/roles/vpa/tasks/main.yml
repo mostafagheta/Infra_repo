@@ -16,22 +16,6 @@
     version: "{{ vpa_repo_version }}"
     update: true
 
-- name: Install OpenSSL 1.1 for VPA certificate generation
-  ansible.builtin.package:
-    name: openssl11
-    state: present
-  become: true
-  become_user: root
-
-- name: Make OpenSSL 1.1 the VPA script default
-  ansible.builtin.file:
-    src: /usr/bin/openssl11
-    dest: /usr/local/bin/openssl
-    state: link
-    force: true
-  become: true
-  become_user: root
-
 - name: Install Vertical Pod Autoscaler
   ansible.builtin.command:
     cmd: ./hack/vpa-up.sh
