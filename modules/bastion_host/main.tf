@@ -33,7 +33,7 @@ resource "aws_security_group" "bastion" {
 }
 
 locals {
-  user_data = templatefile("${path.module}/user1_data.sh", {
+  user_data = templatefile("${path.module}/user_data.sh", {
     cluster_name          = var.eks_cluster_name
     cluster_endpoint      = var.eks_cluster_endpoint
     aws_region           = data.aws_region.current.region
