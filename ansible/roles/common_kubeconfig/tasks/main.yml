@@ -1,12 +1,19 @@
 ---
 # tasks file for common_kubeconfig
+- name: Ensure python3-pip is installed
+  ansible.builtin.package:
+    name:
+      - python3-pip
+    state: present
+  become: true
+  become_user: root
+
 - name: Install the Kubernetes Python client
   ansible.builtin.pip:
     name: "{{ kubernetes_python_package }}"
     executable: pip3
   become: true
-  environment:
-    HOME: /home/eks-manager
+  become_user: root
 
 - name: Check whether kubectl is installed
   ansible.builtin.stat:
@@ -20,6 +27,7 @@
     dest: /usr/local/bin/kubectl
     mode: '0755'
   become: true
+  become_user: root
   when: not kubectl_binary.stat.exists
 
 - name: Check whether Helm is installed
@@ -48,7 +56,14 @@
     remote_src: true
     mode: '0755'
   become: true
+  become_user: root
   when: not helm_binary.stat.exists
+
+- name: Ensure .kube directory exists
+  ansible.builtin.file:
+    path: /home/eks-manager/.kube
+    state: directory
+    mode: '0750'
 
 - name: Generate kubeconfig for EKS cluster
   ansible.builtin.command:
