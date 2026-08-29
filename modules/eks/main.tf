@@ -55,6 +55,10 @@ access_entries = {
     vpc-cni = {
       before_compute = true
     }
+    aws-ebs-csi-driver = {
+      most_recent              = true
+      service_account_role_arn = module.ebs_csi_irsa_role.iam_role_arn
+    }
   }
   eks_managed_node_groups = {
     main = {
@@ -72,6 +76,17 @@ access_entries = {
         "k8s.io/cluster-autoscaler/enabled"            = "true"
         "k8s.io/cluster-autoscaler/${var.clustername}" = "owned"
       })
+    }
+  }
+
+  node_security_group_additional_rules = {
+    ingress_alb_8080 = {
+      description = "Allow inbound TCP port 8080 from VPC for ALB TargetGroup"
+      protocol    = "tcp"
+      from_port   = 8080
+      to_port     = 8080
+      type        = "ingress"
+      cidr_blocks = [var.vpc_cidr_block]
     }
   }
 
@@ -98,6 +113,23 @@ module "cluster_autoscaler_irsa_role" {
     eks = {
       provider_arn               = module.eks.oidc_provider_arn
       namespace_service_accounts = ["kube-system:cluster-autoscaler"]
+    }
+  }
+
+  tags = var.tags
+}
+
+module "ebs_csi_irsa_role" {
+  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
+  version = "~> 5.0"
+
+  role_name             = "${var.clustername}-ebs-csi"
+  attach_ebs_csi_policy = true
+
+  oidc_providers = {
+    eks = {
+      provider_arn               = module.eks.oidc_provider_arn
+      namespace_service_accounts = ["kube-system:ebs-csi-controller-sa"]
     }
   }
 

@@ -30,6 +30,7 @@ module "eks" {
   clustername                  = var.clustername
   kubernetes_version           = var.kubernetes_version
   vpc_id                       = module.vpc.vpc_id
+  vpc_cidr_block               = var.vpc_cidr_block
   private_subnets_ids          = module.vpc.private_subnet_ids
   endpoint_private_access      = var.endpoint_private_access
   endpoint_public_access       = var.endpoint_public_access
