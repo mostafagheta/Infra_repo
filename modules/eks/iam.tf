@@ -241,6 +241,67 @@ resource "aws_eks_pod_identity_association" "velero" {
 }
 
 
+# -----------------------------------------------------------------------------
+# Argo CD Image Updater - Pod Identity
+# -----------------------------------------------------------------------------
+resource "aws_iam_role" "argocd_image_updater_pod_identity" {
+  name = "${var.clustername}-argocd-image-updater"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect = "Allow"
+      Principal = {
+        Service = "pods.eks.amazonaws.com"
+      }
+      Action = [
+        "sts:AssumeRole",
+        "sts:TagSession"
+      ]
+    }]
+  })
+  tags = var.tags
+}
+
+resource "aws_iam_role_policy" "argocd_image_updater_pod_identity" {
+  name = "${var.clustername}-argocd-image-updater"
+  role = aws_iam_role.argocd_image_updater_pod_identity.id
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "ecr:GetAuthorizationToken"
+        ]
+        Resource = "*"
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "ecr:BatchCheckLayerAvailability",
+          "ecr:BatchGetImage",
+          "ecr:DescribeImages",
+          "ecr:DescribeImageScanFindings",
+          "ecr:DescribeRepositories",
+          "ecr:GetDownloadUrlForLayer",
+          "ecr:GetLifecyclePolicy",
+          "ecr:GetRepositoryPolicy",
+          "ecr:ListImages",
+          "ecr:ListTagsForResource"
+        ]
+        Resource = "arn:aws:ecr:*:${data.aws_caller_identity.current.account_id}:repository/*"
+      }
+    ]
+  })
+}
+
+resource "aws_eks_pod_identity_association" "argocd_image_updater" {
+  cluster_name    = module.eks.cluster_name
+  namespace       = "argocd"
+  service_account = "argocd-image-updater"
+  role_arn        = aws_iam_role.argocd_image_updater_pod_identity.arn
+}
+
 data "aws_caller_identity" "current" {}
 
 resource "aws_s3_bucket" "velero" {
