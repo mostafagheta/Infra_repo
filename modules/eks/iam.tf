@@ -226,6 +226,20 @@ resource "aws_eks_pod_identity_association" "external_secrets" {
   role_arn        = aws_iam_role.external_secrets_pod_identity.arn
 }
 
+resource "aws_eks_pod_identity_association" "aws_lb_controller" {
+  cluster_name    = module.eks.cluster_name
+  namespace       = "kube-system"
+  service_account = "aws-load-balancer-controller"
+  role_arn        = aws_iam_role.lb_controller_pod_identity.arn
+}
+
+resource "aws_eks_pod_identity_association" "velero" {
+  cluster_name    = module.eks.cluster_name
+  namespace       = "velero"
+  service_account = "velero"
+  role_arn        = aws_iam_role.velero_pod_identity.arn
+}
+
 
 data "aws_caller_identity" "current" {}
 
